@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Una pregunta importante 💕</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg1:#ffe0ea;--bg2:#fff3f7;--ink:#5a2542;--soft:#8c5873;--card:rgba(255,255,255,.78);
+  --accent:#e63b73;--accent2:#ff8fb0;--on:#fff;--shadow:rgba(230,59,115,.3);--cat1:#fffaf6;--cat2:#f0b070;
+  color-scheme:light;box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){--bg1:#2b1232;--bg2:#431c4c;--ink:#ffe4ef;--soft:#dcaac4;--card:rgba(255,255,255,.09);--accent:#ff7aa5;--accent2:#ff9fbd;--on:#3a1442;--shadow:rgba(255,122,165,.3);color-scheme:dark}
+}
+:root[data-theme="dark"]{--bg1:#2b1232;--bg2:#431c4c;--ink:#ffe4ef;--soft:#dcaac4;--card:rgba(255,255,255,.09);--accent:#ff7aa5;--accent2:#ff9fbd;--on:#3a1442;--shadow:rgba(255,122,165,.3);color-scheme:dark}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{height:100%;margin:0;font-family:'Nunito',system-ui,sans-serif;font-weight:600;color:var(--ink);background:linear-gradient(160deg,var(--bg1),var(--bg2)) fixed;background-color:var(--bg1)}
+main{min-height:100%;max-width:560px;margin:0 auto;padding:22px 18px 34px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;box-sizing:border-box}
+section{width:100%;display:flex;flex-direction:column;align-items:center;gap:14px}
+[hidden]{display:none!important}
+h1,h2{font-family:'Pacifico',cursive;font-weight:400;margin:0;line-height:1.25}
+h1{font-size:clamp(28px,8.5vw,42px)}
+h2{font-size:clamp(22px,6.5vw,30px);margin-top:10px;color:var(--accent)}
+p{margin:0;font-size:17px;line-height:1.5;color:var(--soft)}
+
+.cats{position:relative;display:flex;justify-content:center;align-items:flex-end;margin-top:4px}
+.cats svg{width:min(34vw,140px);height:auto;display:block}
+.cats .l{margin-right:-8px;animation:inL 2.6s ease-in-out infinite}
+.cats .r{margin-left:-8px;animation:inR 2.6s ease-in-out infinite}
+@keyframes inL{0%,100%{transform:rotate(-9deg)}50%{transform:rotate(-2deg) translateX(7px)}}
+@keyframes inR{0%,100%{transform:rotate(9deg)}50%{transform:rotate(2deg) translateX(-7px)}}
+.kiss{position:absolute;left:50%;top:18%;font-size:26px;animation:up 2.6s ease-in-out infinite}
+@keyframes up{0%{transform:translate(-50%,10px) scale(.6);opacity:0}50%{opacity:1}100%{transform:translate(-50%,-40px) scale(1.2);opacity:0}}
+
+.btns{display:flex;gap:18px;justify-content:center;align-items:center;min-height:70px}
+.btn{border:0;border-radius:999px;padding:15px 38px;font:800 19px/1 'Nunito',system-ui,sans-serif;cursor:pointer;transition:transform .25s}
+#yes{background:var(--accent);color:var(--on);box-shadow:0 8px 22px var(--shadow)}
+#no{background:var(--card);color:var(--ink);border:2px solid var(--accent2);transition:left .25s,top .25s;z-index:5}
+.btn:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+
+.sad{display:flex;align-items:center;gap:8px;min-height:62px;visibility:hidden;background:var(--card);border-radius:20px;padding:4px 16px 4px 8px;font-weight:800;color:var(--ink)}
+.sad.show{visibility:visible;animation:pop .3s ease}
+.sad svg{width:54px;height:54px}
+@keyframes pop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+
+ul{list-style:none;margin:0;padding:0;width:100%;display:flex;flex-direction:column;gap:10px}
+li{background:var(--card);border-radius:18px;padding:13px 16px;font-size:17px;line-height:1.45;text-align:left;color:var(--ink)}
+.final{font-family:'Pacifico',cursive;font-size:clamp(20px,6vw,26px);line-height:1.5;color:var(--accent);margin-top:10px}
+.rise{opacity:0;animation:rise .7s ease forwards;animation-delay:calc(var(--i,0)*.4s + .5s)}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.fall{position:fixed;top:-40px;pointer-events:none;z-index:9;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(112vh) rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){
+  .cats .l,.cats .r,.kiss,.fall{animation:none}
+  .rise{animation:none;opacity:1}
+}
+</style>
+</head>
+<body>
+<main>
+  <div class="cats" aria-hidden="true">
+    <div class="l" id="catL"></div>
+    <span class="kiss">💗</span>
+    <div class="r" id="catR"></div>
+  </div>
+
+  <!-- PANTALLA 1: la pregunta -->
+  <section id="s1">
+    <h1>¿Quieres ser mi novia?</h1>
+    <p id="sub"></p>
+    <div class="sad" id="sad" aria-live="polite"><span id="sadCat"></span><span id="sadTxt"></span></div>
+    <div class="btns">
+      <button class="btn" id="yes">Sí 💖</button>
+      <button class="btn" id="no">No</button>
+    </div>
+  </section>
+
+  <!-- PANTALLA 2: las razones (edita los textos como quieras) -->
+  <section id="s2" hidden>
+    <h1 class="rise" id="yay"></h1>
+
+    <h2 class="rise">Por qué quiero ser tu novio</h2>
+    <ul>
+      <li class="rise">Porque contigo hasta un día cualquiera se siente especial.</li>
+      <li class="rise">Porque tu sonrisa me arregla el día entero.</li>
+      <li class="rise">Porque a tu lado quiero ser mejor cada día.</li>
+      <li class="rise">Porque contigo me siento en casa.</li>
+      <li class="rise">Porque eres mi persona favorita en el mundo.</li>
+    </ul>
+
+    <h2 class="rise">Lo que quiero contigo</h2>
+    <ul>
+      <li class="rise">🌷 Cuidarte siempre, en los días lindos y en los difíciles.</li>
+      <li class="rise">💞 Amarte con todo el corazón, sin condiciones.</li>
+      <li class="rise">🤍 Respetarte, escucharte y apoyar cada uno de tus sueños.</li>
+      <li class="rise">🌙 Darte un amor incondicional, hoy y mañana.</li>
+      <li class="rise">😄 Hacerte reír hasta que te duela la pancita.</li>
+      <li class="rise">🫶 Caminar de tu mano, a donde tú quieras ir.</li>
+    </ul>
+
+    <p class="final rise">Prometo quererte cada día un poquito más que ayer. Te quiero muchísimo. 💕</p>
+  </section>
+</main>
+
+<script>
+const NOMBRE = 'mi amor'; // ← cambia por su nombre
+
+function cat(color, mood){
+  const f = '#4a2238', p = '#ff7aa2';
+  let eyes, mouth, extra = '';
+  if(mood === 'kiss'){
+    eyes = `<path d="M29 57q7-9 14 0M57 57q7-9 14 0" fill="none" stroke="${f}" stroke-width="3" stroke-linecap="round"/>`;
+    mouth = `<ellipse cx="50" cy="75" rx="3.5" ry="4.5" fill="${p}"/>`;
+  } else {
+    eyes = `<circle cx="37" cy="56" r="5.5" fill="${f}"/><circle cx="63" cy="56" r="5.5" fill="${f}"/><circle cx="35.5" cy="54" r="1.8" fill="#fff"/><circle cx="61.5" cy="54" r="1.8" fill="#fff"/>`;
+    mouth = `<path d="M42 79q8-8 16 0" fill="none" stroke="${f}" stroke-width="3" stroke-linecap="round"/>`;
+    extra = `<path d="M28 44l14 6M72 44l-14 6" stroke="${f}" stroke-width="3" stroke-linecap="round"/><path d="M36 63q-4 6 0 9q4-3 0-9z" fill="#7cc7ff"/>`;
+  }
+  return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <path d="M16 46L20 10L47 31Z" fill="${color}" stroke="${f}" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M84 46L80 10L53 31Z" fill="${color}" stroke="${f}" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M23 35L25 20L38 29Z M77 35L75 20L62 29Z" fill="#ffb3c7"/>
+    <ellipse cx="50" cy="62" rx="38" ry="31" fill="${color}" stroke="${f}" stroke-width="3"/>
+    <circle cx="26" cy="68" r="6" fill="#ff9fbd" opacity=".6"/><circle cx="74" cy="68" r="6" fill="#ff9fbd" opacity=".6"/>
+    ${eyes}<path d="M46 65h8l-4 5z" fill="${p}"/>${mouth}${extra}
+    <path d="M10 64l16 3M10 74l16-3M90 64l-16 3M90 74l-16-3" stroke="${f}" stroke-width="2" stroke-linecap="round"/>
+  </svg>`;
+}
+
+document.getElementById('catL').innerHTML = cat('#fffaf6', 'kiss');
+document.getElementById('catR').innerHTML = cat('#f0b070', 'kiss');
+document.getElementById('sadCat').innerHTML = cat('#f0b070', 'sad');
+document.getElementById('sub').textContent = `Tengo algo muy importante que preguntarte, ${NOMBRE}…`;
+document.getElementById('yay').textContent = `¡Sabía que dirías que sí, ${NOMBRE}! 🎉`;
+
+const yes = document.getElementById('yes'), no = document.getElementById('no');
+const sad = document.getElementById('sad'), sadTxt = document.getElementById('sadTxt');
+const msgs = ['¡Vamos, di que sí!', '¡Vamos, di que sí! 🥺', 'Anda… ¡vamos, di que sí!', 'Mira qué carita triste… ¡vamos, di que sí!'];
+let n = 0;
+
+function runAway(){
+  n++;
+  if(n === 1){
+    const r = no.getBoundingClientRect();
+    no.style.position = 'fixed';
+    no.style.left = r.left + 'px';
+    no.style.top = r.top + 'px';
+    void no.offsetWidth;
+  }
+  const m = 16, w = no.offsetWidth, h = no.offsetHeight, yr = yes.getBoundingClientRect();
+  let x, y, t = 0;
+  do {
+    x = m + Math.random() * Math.max(0, innerWidth - w - 2 * m);
+    y = m + Math.random() * Math.max(0, innerHeight - h - 2 * m);
+    t++;
+  } while(t < 25 && x < yr.right + 12 && x + w > yr.left - 12 && y < yr.bottom + 12 && y + h > yr.top - 12);
+  no.style.left = x + 'px';
+  no.style.top = y + 'px';
+  sadTxt.textContent = msgs[(n - 1) % msgs.length];
+  sad.classList.remove('show'); void sad.offsetWidth; sad.classList.add('show');
+  yes.style.transform = `scale(${Math.min(1 + n * 0.07, 1.5)})`;
+}
+no.addEventListener('pointerenter', runAway);
+no.addEventListener('click', runAway);
+
+yes.addEventListener('click', () => {
+  document.getElementById('s1').hidden = true;
+  document.getElementById('s2').hidden = false;
+  document.querySelectorAll('#s2 .rise').forEach((el, i) => el.style.setProperty('--i', i));
+  window.scrollTo(0, 0);
+  for(let i = 0; i < 36; i++){
+    const s = document.createElement('span');
+    s.className = 'fall';
+    s.textContent = ['💖', '💗', '💕', '🌸', '✨'][i % 5];
+    s.style.cssText = `left:${Math.random() * 100}vw;font-size:${16 + Math.random() * 18}px;animation-duration:${3 + Math.random() * 3}s;animation-delay:${Math.random() * 1.5}s`;
+    document.body.appendChild(s);
+    setTimeout(() => s.remove(), 8000);
+  }
+});
+</script>
+</body>
+</html>
